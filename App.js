@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import Routes from './Routes';
 import {AppLoading} from 'expo';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, StatusBar } from 'react-native';
 import * as Font from 'expo-font';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+
+import Navigation from './Navigation'
 
 const fetchFonts = async () => {
   await Font.loadAsync({
@@ -26,9 +27,7 @@ export default function App(props) {
     )
   } else if (dataLoaded) {
     return(
-      <SafeAreaProvider>
-        <Routes />
-      </SafeAreaProvider>
+        <Navigation />
     )
   }
 }

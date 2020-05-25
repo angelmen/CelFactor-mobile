@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, StyleSheet, SafeAreaView} from 'react-native';
 
 //import components
 import NavHeader from '../components/navHeader';
@@ -10,12 +9,9 @@ import SeleccionProducto from '../components/Ventas/seleccionProducto'
 export default class Ventas extends Component {
   render() {
     return (
-      <SafeAreaView forceInset={{ top: 'always' }}>
-        <View>
-          <NavHeader name="Ventas" />
-          <DescModulo descripcion="Módulo de Ventas" />
-          <SeleccionProducto />
-        </View>
+      <SafeAreaView forceInset={{ top: 'always' }} style={styles.container}>
+        <NavHeader name={"Ventas"}/>
+        <SeleccionProducto />
       </SafeAreaView>
     );
   }
