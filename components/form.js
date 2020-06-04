@@ -11,6 +11,9 @@ import { Actions } from "react-native-router-flux";
 
 
 export default class Form extends Component{
+    constructor(props){
+        super(props)
+    }
     goHome(){
         Actions.Home();
     }
@@ -25,13 +28,15 @@ export default class Form extends Component{
             <View style={styles.loginContainer}>
             <View style={styles.loginDataContainer}>
                 <View style={styles.loginDataInput}>
+                    <Text style={{ fontFamily: 'century-gothic', color: "rgba(15, 0 , 255, 1)" }}>Codigo de empresa </Text>
+                    <TextInput style={styles.loginInput}></TextInput>
                     <Text style={{ fontFamily: 'century-gothic', color: "rgba(15, 0 , 255, 1)" }}>Usuario </Text>
-                    <TextInput style={styles.loginInput} onSubmitEditing={() => this.loginPass.focus()}></TextInput>
+                    <TextInput style={styles.loginInput}></TextInput>
                     <Text style={{ fontFamily: 'century-gothic', color: "rgba(15, 0 , 255, 1)" }}>Contraseña </Text>
-                    <TextInput style={styles.loginInput} ref={(input) => this.loginPass = input}></TextInput>
+                    <TextInput style={styles.loginInput} secureTextEntry></TextInput>
                 </View>
             </View>
-            <TouchableOpacity style={styles.loginButtonContainer} activeOpacity={0.8} ref={(input) => this.loginPass = input} onPress={() => {if(this.auth()){this.goHome()}}}>
+            <TouchableOpacity style={styles.loginButtonContainer} activeOpacity={0.8} ref={(input) => this.loginPass = input} onPress={()=>{this.props.onPress}}>
                 <View style={styles.loginButton}>
                     <Text style={styles.loginButtonText}>Enviar</Text>
                 </View>

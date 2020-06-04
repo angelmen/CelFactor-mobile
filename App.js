@@ -14,6 +14,8 @@ const fetchFonts = async () => {
   })
 }
 
+
+
 export default function App(props) {
   const [dataLoaded, setDataLoaded] = useState(false);
 

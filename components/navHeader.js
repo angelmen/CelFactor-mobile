@@ -14,9 +14,7 @@ export default function NavHeader({ name, icon }) {
   const navigation = useNavigation();
 
   return (
-    <ImageBackground
-      style={styles.header}
-      source={require('../assets/images/Gradient_mmOEJc4.png')}>
+    <View style={styles.header}>
       {icon == 'back' ? (
         <TouchableWithoutFeedback
           onPress={navigation.goBack}>
@@ -24,7 +22,7 @@ export default function NavHeader({ name, icon }) {
             style={styles.headerMeuBtn}
             name="left"
             size={30}
-            color="black"
+            color="#FFF"
           />
         </TouchableWithoutFeedback>
       ) : (
@@ -33,20 +31,21 @@ export default function NavHeader({ name, icon }) {
             style={styles.headerMeuBtn}
             name="md-menu"
             size={30}
-            color="black"
+            color="#FFF"
           />
         </TouchableWithoutFeedback>
       )}
       <Text style={styles.navMenuName}>{name}</Text>
-    </ImageBackground>
+    </View>
   );
 }
 
 var styles = StyleSheet.create({
   header: {
-    height: 80,
+    height: 60,
     flexDirection: 'row',
     alignItems: 'flex-end',
+    backgroundColor: "#741BF2"
   },
   headerMeuBtn: {
     width: 24,

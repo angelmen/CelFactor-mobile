@@ -30,12 +30,8 @@ export default class Inventario extends Component {
     };
   }
 
-  componentDidMount() {
-    this.setState({ isLoading: false });
-    setInterval(() => {
-      this.setState({ isLoading: true });
-      this.setState({ isLoading: false });
-    }, 900000);
+  componentDidMount(){
+    this.setState({isLoading: false})
   }
 
   filter(str){
@@ -57,6 +53,8 @@ export default class Inventario extends Component {
         <SafeAreaView
           forceInset={{ top: 'always' }}
           style={{ flex: 1, backgroundColor: '#fff' }}>
+          <StatusBar barStyle={'ligth-content'} backgroundColor="#000455" />
+
           <NavHeader name={'Inventario'} />
           <GetProducts />
           <AddProductButton />

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import {
   View,
   Text,
@@ -6,88 +6,62 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
-  Alert
+  Alert,
+  AsyncStorage,
+  ScrollView,
+  TextInput,
 } from 'react-native';
 import SearchableDropdown from 'react-native-searchable-dropdown';
-import AsyncStorage from '@react-native-community/async-storage';
 import { SearchBar, ListItem } from 'react-native-elements';
-
 import { useIsFocused } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import { DataTable } from 'react-native-paper';
 
-export default function Screen() {
+var count = 0;
+
+function AddToOrders({ item }) {
+  return (
+    <View style={{ alignSelf: 'center', zIndex: 100, elevation: 100 }}>
+      <Text>Agregar a la orden</Text>
+      <TextInput value={item.description} editable={false} />
+      <TextInput value={item.unit_price} />
+      <TextInput placeholder={'Detalles '} />
+      <TextInput placeholder={'Cantidad '} />
+    </View>
+  );
+}
+
+function AddProducts() {
+  const navigation = useNavigation();
+  navigation.navigate('AddProductsToOrder');
+}
+
+export default function Screen({ route, navigation }) {
   const isFocused = useIsFocused();
   if (isFocused) {
-    return <SeleccionProducto />;
+    return <SeleccionProducto navigation={navigation}/>;
   } else {
     return <View />;
   }
 }
 
-async function getData() {
-  try {
-    const jsonValue = await AsyncStorage.getItem('@listOfProducts');
-    return jsonValue != null ? JSON.parse(jsonValue).data : null;
-  } catch (e) {
-    alert('error loading the data!', e);
-    // error reading value
-  }
-}
-
 export class SeleccionProducto extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       serverData: [],
       arrayholder: [],
       search: '',
-      isLoading: true,
+      isLoading: false,
       text: '',
       editing: false,
       refreshing: false,
       error: false,
-      showItems: false,
+      showItems: true,
+      orden: [],
     };
-  }
-
-  componentDidMount() {
-    getData().then(data => {
-      this.setState({ serverData: data, arrayholder: data, isLoading: false });
-    });
-  }
-
-  renderHeader() {
-    return (
-      <SearchBar
-        lightTheme
-        editable={true}
-        ref={(input)=>this.mySearchBar = input}
-        placeholder="Buscar producto"
-        onFocus={() => this.setState({ showItems: true })}
-        onChangeText={text => this.SearchFilterFunction(text)}
-        onClear={text => this.SearchFilterFunction('')}
-        value={this.state.search}
-        inputContainerStyle={{ maxHeight: 20 }}
-        containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
-      />
-    );
-  }
-
-  SearchFilterFunction(text) {
-    //passing the inserted text in textinput
-    const newData = this.state.arrayholder.filter(function(item) {
-      //applying filter for the inserted text in search bar
-      const itemData = item.description
-        ? item.description.toUpperCase()
-        : ''.toUpperCase();
-      const textData = text.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
-    this.setState({
-      //setting the filtered newData on datasource
-      //After setting the data it will automatically re-render the view
-      serverData: newData,
-      search: text,
-    });
+    this.orden = [];
+    this.navigation = this.props.navigation;
   }
 
   render() {
@@ -97,41 +71,123 @@ export class SeleccionProducto extends Component {
       </View>
     ) : (
       <View style={styles.container}>
-        {this.renderHeader()}
-        {this.state.showItems ? (
-          <FlatList
-            ref={this.myComponent}
-            data={this.state.serverData}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => <Product item={item} />}
-          />
-        ) : (
-          <View />
-        )}
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            padding: 5,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <TouchableOpacity
+            style={{
+              paddingVertical: 10,
+              paddingHorizontal: 10,
+              backgroundColor: 'red',
+              marginHorizontal: 10,
+              borderRadius: 10,
+            }}
+            onPress={() => {
+              this.setState({ orden: [] });
+            }}>
+            <Text style={{ color: '#fff' }}>Eliminar orden</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              paddingVertical: 10,
+              paddingHorizontal: 30,
+              backgroundColor: 'blue',
+              marginHorizontal: 10,
+              borderRadius: 10,
+            }}
+            onPress={()=>{alert(this.navigation)}}>
+            <Text style={{ color: '#fff' }}>Agregar productos</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ flex: 6 }}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              paddingVertical: 20,
+              paddingHorizontal: 10,
+            }}>
+            Esta venta
+          </Text>
+          <DataTable>
+            <DataTable.Header>
+              <DataTable.Title>Nombre</DataTable.Title>
+              <DataTable.Title numeric>Cantidad</DataTable.Title>
+              <DataTable.Title numeric>Precio</DataTable.Title>
+            </DataTable.Header>
+            <ScrollView style={{ maxHeight: 250 }}>
+              {this.state.orden.map(item => {
+                return <Product item={item} modal={'orden'} />;
+              })}
+            </ScrollView>
+          </DataTable>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            padding: 5,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <TouchableOpacity
+            style={{
+              padding: 15,
+              backgroundColor: 'red',
+              marginHorizontal: 10,
+              borderRadius: 10,
+            }}>
+            <Text style={{ color: '#fff' }}>cancelar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              padding: 15,
+              backgroundColor: 'green',
+              marginHorizontal: 10,
+              borderRadius: 10,
+            }}>
+            <Text style={{ color: '#fff' }}>Cobrar</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
 }
 
-function Product({ item }) {
-  return (
-    <TouchableOpacity
-      style={styles.product}
-      onPress={() => {
-        Alert.alert(item.description);
-      }}>
-      <Text style={styles.productDesc}>{item.description}</Text>
-      <Text style={styles.productDetail}>{'Restantes: ' + item.stock}</Text>
-      <Text style={styles.productDetail}>{'Precio: ' + item.unit_price}</Text>
-    </TouchableOpacity>
-  );
+function Product({ item, modal }) {
+  if (modal == 'orden') {
+    return (
+      <DataTable.Row>
+        <DataTable.Cell>
+          <Text style={{ fontSize: 10 }}>{item.description}</Text>
+        </DataTable.Cell>
+        <DataTable.Cell numeric>{item.stock}</DataTable.Cell>
+        <DataTable.Cell numeric>{item.unit_price}</DataTable.Cell>
+      </DataTable.Row>
+    );
+  } else {
+    return (
+      <TouchableOpacity style={styles.product}>
+        <Text style={styles.productDesc}>{item.description}</Text>
+        <Text style={styles.productDetail}>{'Cantidad: ' + item.stock}</Text>
+        <Text style={styles.productDetail}>{'Costo: ' + item.cost}</Text>
+      </TouchableOpacity>
+    );
+  }
 }
 
 var styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
- product: {
+  product: {
     alignSelf: 'center',
     width: '90%',
     borderWidth: 0,
@@ -153,6 +209,6 @@ var styles = StyleSheet.create({
   },
   productDetail: {
     color: '#B885FF',
-    fontSize: 12
+    fontSize: 12,
   },
 });

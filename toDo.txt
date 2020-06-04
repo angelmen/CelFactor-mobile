@@ -1,0 +1,3 @@
+necesito obtener el numero actual de facturas para cada empresa, está almacenado en mongodb, en el counter, pero lo requiero en el API para obtenerlo rápido
+
+https://celfactor-api.glitch.me/v2/invoices/?belong_to=1

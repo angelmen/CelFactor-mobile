@@ -8,11 +8,12 @@ import {
   StyleSheet,
   FlatList,
   RefreshControl,
+  AsyncStorage,
 } from 'react-native';
 import { SearchBar, ListItem } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
-import AsyncStorage from '@react-native-community/async-storage';
+//import AsyncStorage from '@react-native-community/async-storage';
 
 function Product({ item }) {
   const navigation = useNavigation();
@@ -29,6 +30,16 @@ function Product({ item }) {
   );
 }
 
+async function getData() {
+  try {
+    const jsonValue = await AsyncStorage.getItem('@listOfProducts');
+    return jsonValue != null ? JSON.parse(jsonValue).data : null;
+  } catch (e) {
+    alert('error loading the data!', e);
+    // error reading value
+  }
+}
+
 export default function Screen() {
   const isFocused = useIsFocused();
   if (isFocused) {
@@ -43,7 +54,7 @@ const storeData = async value => {
     const jsonValue = JSON.stringify(value);
     await AsyncStorage.setItem('@listOfProducts', jsonValue);
   } catch (e) {
-    alert(e)
+    alert(e);
     // saving error
   }
 };
@@ -67,8 +78,9 @@ export class GetProducts extends Component {
     this.getData();
   }
 
-  getData() {
+  async getData() {
     const url = 'https://celfactor-api.glitch.me/v2/products/?belong_to=1';
+
     fetch(url)
       .then(result => {
         if (!result.ok) throw Error(result.statusText);
@@ -84,10 +96,8 @@ export class GetProducts extends Component {
           {
             isLoading: false,
             dataSource: responseJson.data,
-          },
-          function() {
-            this.arrayholder = responseJson.data;
-            storeData(responseJson);
+          }, ()=>{
+            this.arrayholder = responseJson.data
           }
         );
       })
@@ -107,7 +117,7 @@ export class GetProducts extends Component {
   renderHeader() {
     return (
       <SearchBar
-        containerStyle={{ backgroundColor: '#FFF' }}
+        containerStyle={{ backgroundColor: '#FFF', marginBottom: 10 }}
         lightTheme
         round
         editable={true}
@@ -143,7 +153,7 @@ export class GetProducts extends Component {
         <ActivityIndicator size={'large'} />
       </View>
     ) : (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1}}>
         {this.renderHeader()}
         {!this.state.error ? (
           <FlatList
@@ -192,7 +202,7 @@ var styles = StyleSheet.create({
     alignSelf: 'center',
     width: '90%',
     borderWidth: 0,
-    marginVertical: 10,
+    marginBottom: 10,
     padding: 10,
     elevation: 5,
     backgroundColor: '#FFF',
@@ -204,7 +214,7 @@ var styles = StyleSheet.create({
   productDesc: {
     color: '#6435A6',
     fontWeight: 'bold',
-    fontFamily: 'centuri-gothic',
+    fontFamily: 'century-gothic',
     fontSize: 20,
   },
   productDetail: {

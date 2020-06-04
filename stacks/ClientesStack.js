@@ -4,29 +4,29 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 
-//import Ventas from '../pages/Ventas';
-import AddProductsToOrder from '../pages/Ventas/AddProductsToOrder'
-import Cobrar from '../pages/Ventas/Cobrar'
-import Ventas from '../pages/Ventas'
+import Clientes from '../pages/Clientes/Clientes'
+import AddClient from '../pages/Clientes/AddClient'
+import EditClient from '../pages/Clientes/EditClient'
+
 
 const Tab = createBottomTabNavigator();
 
-export default function VentasStak() {
+export default function ClientesStak() {
   return (
-    <Tab.Navigator initialRouteName="Ventas">
+    <Tab.Navigator initialRouteName="Clientes">
       <Tab.Screen
-        name="Ventas"
-        component={Ventas}
+        name="Clientes"
+        component={Clientes}
         options={{ tabBarVisible: false }}
       />
       <Tab.Screen
-        name="AddProductsToOrder"
-        component={AddProductsToOrder}
+        name="AddClient"
+        component={AddClient}
         options={{ tabBarVisible: false }}
       />
-       <Tab.Screen
-        name="Cobrar"
-        component={Cobrar}
+      <Tab.Screen
+        name="EditClient"
+        component={EditClient}
         options={{ tabBarVisible: false }}
       />
     </Tab.Navigator>
