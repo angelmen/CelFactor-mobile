@@ -27,7 +27,7 @@ async function isAuthenticated(){
 
 export default function Navigation() {
     
-    if(false){
+    if(true){
       return (
         <SafeAreaProvider>
         <NavigationContainer>

@@ -88,7 +88,7 @@ class Facturas extends Component{
 
   searchFilterFunction(text) {
     const newData = this.arrayHolder.filter(function (item) {
-      const itemData = item.invoice_id ? item.invoice_id.toString().toUpperCase() : ''.toUpperCase();
+      const itemData = item.id ? item.id.toString().toUpperCase() : ''.toUpperCase();
       const textData = text.toUpperCase();
       return itemData.indexOf(textData) > -1;
     });
@@ -165,7 +165,7 @@ class Facturas extends Component{
                         fontSize: 16,
                         fontWeight: 'bold',
                       }}>
-                      {'Codigo: ' + invoice.invoice_id}
+                      {'Codigo: ' + invoice.id}
                     </Text>
                     <Text
                       style={{

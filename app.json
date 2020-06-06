@@ -2,16 +2,16 @@
   "expo": {
     "name": "CelFactor",
     "description": "CelFactor mobile",
-    "slug": "snack-92682d20-ceb1-46da-8d3a-3de5de63b4cd",
+    "slug": "CelFactor-mobile",
     "privacy": "unlisted",
     "sdkVersion": "37.0.0",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "primaryColor": "#FFF",
     "icon": "./assets/icon.png",
     "loading": {
       "icon": "./assets/icon.png",
-      "hideExponentText": false
+      "hideExponentText": true
     },
     "packagerOpts": {
       "assetExts": [
@@ -25,7 +25,13 @@
       ]
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.scarbi.celfactor",
+      "buildNumber": "2.0.0"
+    },
+    "android": {
+      "package": "com.scarbi.celfactor",
+      "versionCode": 2
     }
   }
 }

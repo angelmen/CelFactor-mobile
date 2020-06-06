@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   StatusBar,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -27,6 +28,7 @@ export default function Builder({ route }) {
   }
 }
 
+var today = new Date();
 class Cobrar extends Component {
   constructor(props) {
     super(props);
@@ -42,7 +44,7 @@ class Cobrar extends Component {
       search: '',
       selectedClient: {},
       paymentMethodDropdownMsg: 'Metodo de pago',
-      selectedPaymentMethod: {},
+      selectedPaymentMethod: {}
     };
     this.arrayHolder = [];
     this.paymentMethods = [
@@ -50,7 +52,35 @@ class Cobrar extends Component {
       { name: 'Credito corto plazo' },
       { name: 'Credito largo plazo' },
     ];
+    this.invoiceData = {
+        belong_to: 1,
+        seller_name: 'Sterling Zabala',
+        client_name: '',
+        client_company_name: '',
+        company_name: 'YoSmart',
+        products: this.props.params.order,
+        total_to_pay: this.total(),
+        invoice_date: `${today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear()}`,
+        company_information: [{
+          "id": 1,
+          "organization_name": "Mendez Solutions",
+          "location": "n/a",
+          "email": "admd1112@gmail.com",
+          "phones": ["8097778478"],
+          "rnc": "RNC0000001"
+        }],
+        paymentMethod: this.selectedPaymentMethod,
+      }
   }
+  total(){
+  var total = 0;
+  this.props.params.order.map((item) => {
+    total = (item.item.unit_price * item.quantity) + total;
+    console.log(item);
+
+  })
+  return total
+}
 
   componentDidMount() {
     if (this.props.params?.order) {
@@ -88,6 +118,28 @@ class Cobrar extends Component {
 
   clear() {
     this.setState({});
+  }
+
+  async saveInvoice(){
+    const url = `https://celfactor-api.glitch.me/v2/invoices/`
+    try {
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(this.invoiceData),
+      })
+        .then(response => response.json())
+        .then(responseJson => {
+          alert(responseJson.message);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+    
+    
   }
 
   renderSearchBar() {
@@ -194,7 +246,10 @@ class Cobrar extends Component {
                             this.setState({
                               clientDropdownMsg: item.name,
                               showClientsDropdown: false,
-                              selectedClient: item.name
+                              selectedClient: item
+                            }, ()=>{
+                              this.invoiceData.client_name = item.name;
+                              this.invoiceData.client_company_name = item.company_owned_name
                             });
                           }}>
                           <View
@@ -276,6 +331,8 @@ class Cobrar extends Component {
                               selectedPaymentMethod: item.name,
                               showMethodDropdown: false,
                               paymentMethodDropdownMsg: item.name,
+                            }, ()=>{
+                              this.invoiceData.paymentMethod = item.name;
                             });
                           }}>
                           <View
@@ -328,7 +385,22 @@ class Cobrar extends Component {
                   borderRadius: 10,
                 }}
                 onPress={() => {
-                 Print.printAsync(printOptions(this.props.params.order, this.state.selectedClient, this.state.selectedPaymentMethod))
+                  this.saveInvoice().then(
+                  Alert.alert(
+                    'Alerta',
+                    'Desea guardar la factura localmente?',
+                    [
+                      {
+                        text: 'Si',
+                        onPress: () => { Print.printAsync(printOptions(this.props.params.order, this.state.selectedClient, this.state.selectedPaymentMethod)) }
+                      },
+                      {
+                        text: 'No',
+                        style: 'cancel',
+                      },
+                    ],
+                    { cancelable: true }
+                  ))
                 }}>
                 <View>
                   <Text style={{ color: '#FFF', fontWeight: 'bold' }}>
@@ -345,11 +417,11 @@ class Cobrar extends Component {
 }
 
 
-function printOptions(order, client, method){
-  var today = new Date();
+var products = []
+var total = 0
 
-  var products = []
-  var total = 0
+function printOptions(order, client, method){
+  
 
   order.map( (item, index)=>{
     var newItem = 

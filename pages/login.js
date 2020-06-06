@@ -1,4 +1,4 @@
-import React, { useState, Component } from "react";
+/*import React, { useState, Component } from "react";
 import { StyleSheet, Text, ScrollView, StatusBar, View, ImageBackground, TouchableOpacity, Dimensions, AsyncStorage } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -6,7 +6,6 @@ import Logo from '../components/logo';
 import Form from '../components/form';
 import { TextInput } from "react-native-paper";
 
-const bcrypt = require('bcrypt')
 
 export default class LogIn extends Component{
     constructor(props){
@@ -132,3 +131,4 @@ const styles = StyleSheet.create({
 });
 
 
+*/
