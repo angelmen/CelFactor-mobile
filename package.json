@@ -12,7 +12,7 @@
     "@react-navigation/bottom-tabs": "5.4.5",
     "@react-navigation/drawer": "5.7.1",
     "@react-navigation/native": "5.2.6",
-    "aws-sdk": "^2.689.0",
+    "aws-sdk": "^2.814.0",
     "expo": "~37.0.3",
     "expo-font": "8.1.1",
     "expo-print": "8.1.0",
